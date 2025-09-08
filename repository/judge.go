@@ -7,7 +7,7 @@ import (
 
 type JudgeRepository interface {
 	GetByID(ID uint) (*model.Judge, error)
-	GetAll() (model.Judges, error)
+	GetAll() ([]model.Judge, error)
 	Create(judge *model.Judge) error
 	Update(judge *model.Judge) error
 	Delete(ID uint) error
@@ -30,8 +30,8 @@ func (r *judgeRepository) GetByID(ID uint) (*model.Judge, error) {
 	return &judge, nil
 }
 
-func (r *judgeRepository) GetAll() (model.Judges, error) {
-	var judges model.Judges
+func (r *judgeRepository) GetAll() ([]model.Judge, error) {
+	var judges []model.Judge
 	if err := r.db.Find(&judges).Error; err != nil {
 		return nil, err
 	}

@@ -1,16 +1,18 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/IsraelTeo/api-registry-court-files-MVP/model"
 	"github.com/IsraelTeo/api-registry-court-files-MVP/repository"
 )
 
 type CourtService interface {
-	GetByID(uint) (*model.Court, error)
-	GetAll() (model.Courts, error)
+	GetByID(ID uint) (*model.Court, error)
+	GetAll() ([]model.Court, error)
 	Create(*model.Court) (model.Court, error)
-	Update(*model.Court) (model.Court, error)
-	Delete(uint) error
+	Update(ID uint, court *model.Court) (model.Court, error)
+	Delete(ID uint) error
 }
 
 type courtService struct {
@@ -24,36 +26,54 @@ func NewCourtService(courtRepository repository.CourtRepository) CourtService {
 func (s *courtService) GetByID(ID uint) (*model.Court, error) {
 	court, err := s.courtRepository.GetByID(ID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error fetching court by ID")
 	}
+
 	return court, nil
 }
 
-func (s *courtService) GetAll() (model.Courts, error) {
+func (s *courtService) GetAll() ([]model.Court, error) {
 	courts, err := s.courtRepository.GetAll()
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error fetching all courts")
 	}
+
 	return courts, nil
 }
 
 func (s *courtService) Create(court *model.Court) (model.Court, error) {
 	if err := s.courtRepository.Create(court); err != nil {
-		return model.Court{}, err
+		return model.Court{}, errors.New("error creating court")
 	}
+
 	return *court, nil
 }
 
-func (s *courtService) Update(court *model.Court) (model.Court, error) {
-	if err := s.courtRepository.Update(court); err != nil {
-		return model.Court{}, err
+func (s *courtService) Update(ID uint, court *model.Court) (model.Court, error) {
+	if court.ID != ID {
+		return model.Court{}, errors.New("court ID mismatch")
 	}
+
+	courtFound, err := s.courtRepository.GetByID(ID)
+	if err != nil {
+		return model.Court{}, errors.New("court not found to update")
+	}
+
+	court.Name = courtFound.Name
+	court.Headquarters = courtFound.Headquarters
+	court.Judges = courtFound.Judges
+
+	if err := s.courtRepository.Update(court); err != nil {
+		return model.Court{}, errors.New("error updating court")
+	}
+
 	return *court, nil
 }
 
 func (s *courtService) Delete(ID uint) error {
 	if err := s.courtRepository.Delete(ID); err != nil {
-		return err
+		return errors.New("error deleting court")
 	}
+
 	return nil
 }

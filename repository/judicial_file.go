@@ -7,7 +7,7 @@ import (
 
 type JudicialFileRepository interface {
 	GetByID(ID uint) (*model.JudicialFile, error)
-	GetAll() (model.JudicialFiles, error)
+	GetAll() ([]model.JudicialFile, error)
 	Create(file *model.JudicialFile) error
 	Update(file *model.JudicialFile) error
 	Delete(ID uint) error
@@ -33,8 +33,8 @@ func (r *judicialFileRepository) GetByID(ID uint) (*model.JudicialFile, error) {
 	return &file, nil
 }
 
-func (r *judicialFileRepository) GetAll() (model.JudicialFiles, error) {
-	var files model.JudicialFiles
+func (r *judicialFileRepository) GetAll() ([]model.JudicialFile, error) {
+	var files []model.JudicialFile
 	if err := r.db.Preload("Persons").Preload("Lawyers").Find(&files).Error; err != nil {
 		return nil, err
 	}

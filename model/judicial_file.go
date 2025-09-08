@@ -17,8 +17,6 @@ type JudicialFile struct {
 	CourtID            uint       `json:"court_id"`
 
 	// relaciones
-	Persons `gorm:"many2many:judicial_file_persons;constraint:OnDelete:CASCADE;" json:"persons"`
-	Lawyers `gorm:"many2many:judicial_file_lawyers;constraint:OnDelete:CASCADE;" json:"lawyers"`
+	Persons []Person `gorm:"many2many:judicial_file_persons;constraint:OnDelete:CASCADE;" json:"persons"`
+	Lawyers []Lawyer `gorm:"many2many:judicial_file_lawyers;constraint:OnDelete:CASCADE;" json:"lawyers"`
 }
-
-type JudicialFiles []JudicialFile

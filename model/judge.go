@@ -7,5 +7,3 @@ type Judge struct {
 	Specialty string `gorm:"size:100" json:"specialty"`
 	CourtID   uint   `json:"court_id"`
 }
-
-type Judges []Judge

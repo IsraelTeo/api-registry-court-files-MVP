@@ -7,7 +7,7 @@ import (
 
 type CourtRepository interface {
 	GetByID(ID uint) (*model.Court, error)
-	GetAll() (model.Courts, error)
+	GetAll() ([]model.Court, error)
 	Create(court *model.Court) error
 	Update(court *model.Court) error
 	Delete(ID uint) error
@@ -30,8 +30,8 @@ func (r *courtRepository) GetByID(ID uint) (*model.Court, error) {
 	return &court, nil
 }
 
-func (r *courtRepository) GetAll() (model.Courts, error) {
-	var courts model.Courts
+func (r *courtRepository) GetAll() ([]model.Court, error) {
+	var courts []model.Court
 	if err := r.db.Find(&courts).Error; err != nil {
 		return nil, err
 	}
