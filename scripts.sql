@@ -1,27 +1,27 @@
--- Tabla para almacenar información de expedientes judiciales/legales
+-- Tabla para almacenar información de EXPEDIENTES JUDICIALES
 CREATE TABLE judicial_files (
     id SERIAL PRIMARY KEY,
-    file_number VARCHAR(100) NOT NULL,           -- N° de expediente
+    file_number VARCHAR(100) NOT NULL,          -- N° de expediente
     notification_number VARCHAR(100),           -- N° de notificación
     digitization_number VARCHAR(100),           -- N° de digitalización
     document_type VARCHAR(50),                  -- Ej: Resolución, Notificación
     headquarters VARCHAR(100),                  -- Ej: Villa El Salvador
     court VARCHAR(150),                         -- Ej: Juzgado Investigación Preparatoria
     notification_date TIMESTAMPTZ,              -- Fecha de notificación
-    creation_date TIMESTAMPTZ DEFAULT NOW(),
-    update_date TIMESTAMPTZ DEFAULT NOW(),
-    court_id BIGINT NOT NULL,
+    creation_date TIMESTAMPTZ DEFAULT NOW(),    -- Fecha de creación del registro
+    update_date TIMESTAMPTZ DEFAULT NOW(),      -- Fecha de última actualización del registro
+    court_id BIGINT NOT NULL,                   -- fk a la tabla courts (cortes judiciales)
     CONSTRAINT fk_court FOREIGN KEY (court_id) REFERENCES courts(id)
 );
 
--- Tabla para almacenar información de cortes judiciales
+-- Tabla para almacenar información de CORTES JUDICIALES
 CREATE TABLE courts (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,                 -- Ej: Corte Superior de Justicia Lima Sur
-    headquarters VARCHAR(100)                   -- Ej: Villa El Salvador
+    name VARCHAR(150) NOT NULL,                 -- Nombre  Ej: Corte Superior de Justicia Lima Sur
+    headquarters VARCHAR(100)                   -- Sede   Ej: Villa El Salvador
 );
 
--- Tabla para almacenar información de jueces
+-- Tabla para almacenar información de JUECES
 CREATE TABLE judges (
     id SERIAL PRIMARY KEY,
     full_name VARCHAR(200) NOT NULL,
