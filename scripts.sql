@@ -22,28 +22,28 @@ CREATE TABLE courts (
 );
 
 -- Tabla para almacenar información de JUECES
-CREATE TABLE judges (
-    id SERIAL PRIMARY KEY,
-    full_name VARCHAR(200) NOT NULL,
-    specialty VARCHAR(100),                     -- Ej: Juzgado de Investigación Preparatoria
-    court_id BIGINT NOT NULL,
+CREATE TABLE judges (                           
+    id SERIAL PRIMARY KEY, 
+    full_name VARCHAR(200) NOT NULL,            -- Nombre completo del juez
+    specialty VARCHAR(100),                     -- Especialidad Ej: Juzgado de Investigación Preparatoria
+    court_id BIGINT NOT NULL,                   -- fk a la tabla courts (cortes judiciales)
     CONSTRAINT fk_judge_court FOREIGN KEY (court_id) REFERENCES courts(id)
 );
 
--- Tabla para almacenar información de personas relacionadas con los expedientes
+-- Tabla para almacenar información de PERSONAS RELACIONADAS A EXPEDIENTES (Ej: IMPUTADOS, AGRAVIADOS, DESTINATARIOS)
 CREATE TABLE persons (
     id SERIAL PRIMARY KEY,
-    full_name VARCHAR(200) NOT NULL,
-    role VARCHAR(50) NOT NULL,                  -- Ej: IMPUTADO, AGRAVIADO, DESTINATARIO
+    full_name VARCHAR(200) NOT NULL,            -- Nombre completo de la persona
+    role VARCHAR(50) NOT NULL,                  -- Rol Ej: IMPUTADO, AGRAVIADO, DESTINATARIO
     email VARCHAR(150),                         -- Dirección electrónica
-    phone VARCHAR(20)
+    phone_number VARCHAR(20)                           -- Número de teléfono
 );
 
--- Tabla intermedia para relacionar expedientes con personas
+-- Tabla intermedia para relacionar EXPEDIENTES con PERSONAS
 CREATE TABLE judicial_file_persons (
     id SERIAL PRIMARY KEY,
-    judicial_file_id BIGINT NOT NULL,
-    person_id BIGINT NOT NULL,
+    judicial_file_id BIGINT NOT NULL,           -- fk a la tabla judicial_files (expedientes)
+    person_id BIGINT NOT NULL,                  -- fk a la tabla persons (personas)
     CONSTRAINT fk_jf FOREIGN KEY (judicial_file_id) REFERENCES judicial_files(id),
     CONSTRAINT fk_person FOREIGN KEY (person_id) REFERENCES persons(id)
 );
@@ -51,16 +51,16 @@ CREATE TABLE judicial_file_persons (
 -- Tabla para almacenar información de abogados
 CREATE TABLE lawyers (
     id SERIAL PRIMARY KEY,
-    full_name VARCHAR(200) NOT NULL,
+    full_name VARCHAR(200) NOT NULL,            -- Nombre completo del abogado
     bar_number VARCHAR(50),                     -- Número de colegiatura
-    email VARCHAR(150)
+    email VARCHAR(150)                          -- Dirección electrónica
 );
 
 -- Tabla intermedia para relacionar expedientes con abogados
 CREATE TABLE judicial_file_lawyers (
     id SERIAL PRIMARY KEY,
-    judicial_file_id BIGINT NOT NULL,
-    lawyer_id BIGINT NOT NULL,
+    judicial_file_id BIGINT NOT NULL,         -- fk a la tabla judicial_files (expedientes)
+    lawyer_id BIGINT NOT NULL,                -- fk a la tabla lawyers (abogados)
     CONSTRAINT fk_jfl FOREIGN KEY (judicial_file_id) REFERENCES judicial_files(id),
     CONSTRAINT fk_lawyer FOREIGN KEY (lawyer_id) REFERENCES lawyers(id)
 );
